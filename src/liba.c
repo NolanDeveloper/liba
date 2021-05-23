@@ -2,8 +2,6 @@
 
 #include <assert.h>
 
-error
-
 int64_t liba_integer_square_root(int64_t x) {
     assert(x >= 0);
     uint64_t t = x / 2;
