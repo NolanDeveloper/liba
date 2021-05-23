@@ -76,7 +76,7 @@ int64_t liba_power_modulo(int64_t a, int64_t b, int64_t n) {
 
 int64_t liba_binary_search(int64_t left, int64_t right, bool (*func)(int64_t)) {
     assert(func);
-    while (left + 1 < right) {
+    while (right - left > 1) {
         int64_t m = left + (right - left) / 2;
         if (func(m)) {
             right = m;
