@@ -75,6 +75,7 @@ int64_t liba_power_modulo(int64_t a, int64_t b, int64_t n) {
 }
 
 int64_t liba_binary_search(int64_t left, int64_t right, bool (*func)(int64_t)) {
+    assert(left < right);
     assert(func);
     while (right - left > 1) {
         int64_t m = left + (right - left) / 2;
@@ -152,10 +153,7 @@ void liba_partition(int64_t *array, size_t size, int64_t k, size_t *low, size_t 
 
 void liba_order_statistics(int64_t *array, size_t size, size_t k) {
     assert(array);
-    if (!size) {
-        return;
-    }
-    for (;;) {
+    while (size) {
         size_t low, high;
         liba_partition(array, size, array[rand() % size], &low, &high);
         if (low <= k && k < high) {
