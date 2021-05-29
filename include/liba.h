@@ -29,11 +29,12 @@ int64_t liba_greatest_common_divisor_extended(int64_t a, int64_t b, int64_t *x, 
 
 /* Compute multiplicative inverse modulo n. a and n must be co-prime.
  * '(liba_inverse_modulo(a, n) * a) % n = 1'.
+ * Preconditions: 0 < n && n <= INT32_MAX (!!!NOT INT64_MAX!!!)
  * Time complexity: O(log n) */
 int64_t liba_inverse_modulo(int64_t a, int64_t n);
 
 /* 'pow(a, b) % n'
- * Preconditions: b >= 0 && n > 0
+ * Preconditions: 0 <= b && 0 < n
  * Time complexity: O(log b) */
 int64_t liba_power_modulo(int64_t a, int64_t b, int64_t n);
 
@@ -60,7 +61,7 @@ void liba_binary_search_i64(int64_t left, int64_t right, int64_t (*func)(int64_t
 /* Find x such that abs(x_0 - x) < eps where func(x_0) = 0
  * Preconditions: left < right && func is continuous or non-decreasing && func(left) <= 0 && func(right) >= 0
  * Time complexity: O(log n) where n = (right - left) / eps. */
-double liba_binary_search_real(double left, double right, double (*func)(double), double eps);
+double liba_binary_search_real(double left, double right, double (*func)(double));
 
 /* Permute elements of array and find low and high such that
  * array[j] <  k for j < low
@@ -73,6 +74,6 @@ void liba_partition(int64_t *array, size_t size, int64_t k, size_t *low, size_t 
 /* Permute elements of array such that array[k] is the k-th smallest value.
  * Randomized.
  * Time complexity: O(n) on average, O(n^2) in the worst case. */
-void liba_order_statistics(int64_t *array, size_t size, size_t k);
+void liba_order_statistic(int64_t *array, size_t size, size_t k);
 
 #endif

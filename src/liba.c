@@ -1,5 +1,4 @@
 #include <liba.h>
-
 #include <assert.h>
 
 int64_t liba_integer_square_root(int64_t x) {
@@ -40,25 +39,29 @@ int64_t liba_greatest_common_divisor_extended(int64_t a, int64_t b, int64_t *x, 
     int64_t tx = *x;
     int64_t ty = *y;
     *x = ty;
+    assert(!d.quot || ty < INT64_MAX / d.quot);
     *y = tx - ty * d.quot;
     return result;
 }
 
 int64_t liba_inverse_modulo(int64_t a, int64_t n) {
-    int64_t gcd = liba_greatest_common_divisor(a, n);
-    assert(1 == gcd);
-    int64_t result = a % n;
-    if (result < 0) {
-        result += n;
+    assert(0 < n && n <= INT32_MAX);
+    if (a < 0) {
+        a %= n;
+        if (a < 0) {
+            a += n;
+        }
     }
-    return result;
+    int64_t x, y, gcd = liba_greatest_common_divisor_extended(a, n, &x, &y);
+    assert(1 == gcd);
+    return x < 0 ? x + n : x;
 }
 
 int64_t liba_power_modulo(int64_t a, int64_t b, int64_t n) {
-    assert(b >= 0);
-    assert(n > 0);
+    assert(0 <= b);
+    assert(0 < n);
     if (a < 0) {
-        a = a % n;
+        a %= n;
         if (a < 0) {
             a += n;
         }
@@ -77,8 +80,8 @@ int64_t liba_power_modulo(int64_t a, int64_t b, int64_t n) {
 int64_t liba_binary_search(int64_t left, int64_t right, bool (*func)(int64_t)) {
     assert(left < right);
     assert(func);
-    while (right - left > 1) {
-        int64_t m = left + (right - left) / 2;
+    while (right > left + 1) {
+        int64_t m = (left + right) / 2;
         if (func(m)) {
             right = m;
         } else {
@@ -101,14 +104,20 @@ void liba_binary_search_i64(int64_t left, int64_t right, int64_t (*func)(int64_t
     bs_func = NULL;
 }
 
-double liba_binary_search_real(double left, double right, double (*func)(double), double eps) {
+double liba_binary_search_real(double left, double right, double (*func)(double)) {
     assert(left < right);
     assert(func(left) <= 0 && 0 <= func(right));
-    while (right - left > eps) {
-        double m = left + (right - left) / 2;
+    while (true) {
+        double m = (left + right) / 2;
         if (func(m) < 0) {
+            if (left == m) {
+                break;
+            }
             left = m;
         } else {
+            if (right == m) {
+                break;
+            }
             right = m;
         }
     }
@@ -151,7 +160,7 @@ void liba_partition(int64_t *array, size_t size, int64_t k, size_t *low, size_t 
     *high = greater;
 }
 
-void liba_order_statistics(int64_t *array, size_t size, size_t k) {
+void liba_order_statistic(int64_t *array, size_t size, size_t k) {
     assert(array);
     while (size) {
         size_t low, high;
