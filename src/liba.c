@@ -1,13 +1,15 @@
 #include <liba.h>
 #include <assert.h>
 
+#include "compatibility.h"
+
 int64_t liba_integer_square_root(int64_t x) {
     assert(x >= 0);
-    uint64_t t = x / 2;
+    int64_t t = x / 2;
     if (!t) {
         return x;
     }
-    uint64_t next = (t + x / t) / 2;
+    int64_t next = (t + x / t) / 2;
     while (next < t) {
         t = next;
         next = (t + x / t) / 2;
@@ -91,7 +93,7 @@ int64_t liba_binary_search(int64_t left, int64_t right, bool (*func)(int64_t)) {
     return func(left) ? left : right; // func(left) is False means for all x in [left, right) func(x) = False
 }
 
-static _Thread_local int64_t (*bs_func)(int64_t);
+static THREAD_LOCAL int64_t (*bs_func)(int64_t);
 
 static bool low_helper(int64_t n) { return 0 <= bs_func(n); }
 
