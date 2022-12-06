@@ -11,5 +11,5 @@ jobs:
         submodules: recursive
     - run: cmake -E make_directory $GITHUB_WORKSPACE/build
     - run: cd $GITHUB_WORKSPACE/build
-    - run: cmake --build
+    - run: cmake --build .
     - run: ./test-unit/Debug/liba_tests.exe
