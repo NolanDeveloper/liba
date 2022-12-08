@@ -1,3 +1,0 @@
-[submodule "submodules/acutest"]
-	path = submodules/acutest
-	url = https://github.com/mity/acutest.git
